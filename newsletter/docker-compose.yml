@@ -1,0 +1,23 @@
+# Postgres and Redis to be used in both applications
+services:
+  postgres:
+    image: postgres:latest
+    container_name: newsletter-db
+    environment:
+      POSTGRES_USER: adminuser
+      POSTGRES_PASSWORD: adminpass
+      POSTGRES_DB: newsletter
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.s
+
+  redis:
+    image: redis:latest
+    container_name: newsletter-redis
+    ports:
+      - "6380:6379"
+
+volumes:
+  postgres_data:

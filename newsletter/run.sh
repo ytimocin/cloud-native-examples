@@ -15,3 +15,8 @@ sleep 10
 cd ../consumer
 mvn clean install && mvn clean package
 dapr run --app-id consumer --app-port 8081 --dapr-http-port 3501 --resources-path dapr -- java -jar target/consumer-0.0.1-SNAPSHOT.jar &
+
+# Start the subscriptions watcher application (just another consumer that is configured with Beans)
+cd ../subscriptions-watcher
+mvn clean install && mvn clean package
+dapr run --resources-path ./src/components/pubsub --app-id subscriptions-watcher --app-port 3000 -- java -jar target/subscriptions-watcher-0.0.1-SNAPSHOT.jar --server.port=3000 &

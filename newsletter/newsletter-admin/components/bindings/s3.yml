@@ -1,0 +1,17 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: s3
+  namespace: default
+spec:
+  type: bindings.aws.s3
+  version: v1
+  metadata:
+    - name: bucket
+      value: yetkin-dapr-test
+    - name: region
+      value: us-east-1
+    - name: accessKey
+      value: add-your-access-key
+    - name: secretKey
+      value: add-your-secret-key

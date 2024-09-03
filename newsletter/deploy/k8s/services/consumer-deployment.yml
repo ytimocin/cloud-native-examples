@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "consumer"
+        dapr.io/app-port: "8080"
+    spec:
+      containers:
+        - name: consumer
+          image: ytimocin/consumer:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consumer
+spec:
+  type: LoadBalancer
+  selector:
+    app: consumer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

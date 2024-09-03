@@ -15,8 +15,3 @@ spec:
       value: add-your-access-key
     - name: secretKey
       value: add-your-secret-key
-  scope:
-    - newsletter-admin
-    - newsletter
-    - consumer
-    - newsletter

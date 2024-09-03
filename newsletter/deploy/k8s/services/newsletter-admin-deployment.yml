@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: newsletter-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: newsletter-admin
+  template:
+    metadata:
+      labels:
+        app: newsletter-admin
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "newsletter-admin"
+        dapr.io/app-port: "3001"
+    spec:
+      containers:
+        - name: newsletter-admin
+          image: ytimocin/newsletter-admin:latest
+          ports:
+            - containerPort: 3001
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: newsletter-admin
+spec:
+  type: LoadBalancer
+  selector:
+    app: newsletter-admin
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3001

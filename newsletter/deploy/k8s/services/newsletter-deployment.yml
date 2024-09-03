@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: newsletter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: newsletter
+  template:
+    metadata:
+      labels:
+        app: newsletter
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "newsletter"
+        dapr.io/app-port: "8081"
+    spec:
+      containers:
+        - name: newsletter
+          image: ytimocin/newsletter:latest
+          ports:
+            - containerPort: 8081
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: newsletter
+spec:
+  type: LoadBalancer
+  selector:
+    app: newsletter
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081

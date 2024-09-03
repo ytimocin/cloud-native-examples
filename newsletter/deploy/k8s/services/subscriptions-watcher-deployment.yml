@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subscriptions-watcher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subscriptions-watcher
+  template:
+    metadata:
+      labels:
+        app: subscriptions-watcher
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "subscriptions-watcher"
+        dapr.io/app-port: "3000"
+    spec:
+      containers:
+        - name: subscriptions-watcher
+          image: ytimocin/subscriptions-watcher:latest
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: subscriptions-watcher
+spec:
+  type: LoadBalancer
+  selector:
+    app: subscriptions-watcher
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

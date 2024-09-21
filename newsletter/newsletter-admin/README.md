@@ -7,3 +7,5 @@ This service is for the newsletter admin. Features:
 ## Run Locally
 
 - `mvn clean install && mvn clean package`
+- `curl -X POST http://localhost:3001/upload -F "file=@example.txt"`
+- `awslocal s3api list-objects --bucket sample-bucket`

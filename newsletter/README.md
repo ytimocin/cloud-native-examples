@@ -25,25 +25,32 @@ There are 4 micro-services here:
 
 - subscription of **Consumer App** to the **pubsub.redis**
 
-## Run locally
+## Local Postgres, Redis, and S3
 
+Please see docker-compose.yml file for details.
+
+### S3
+
+- S3: `brew install localstack/tap/localstack-cli`. Localstack: <https://docs.localstack.cloud/getting-started/installation/>.
+- `pip install awscli-local`
+- `awslocal s3api create-bucket --bucket sample-bucket`
+- `awslocal s3api list-objects --bucket sample-bucket`
+
+## Run locally (Not on a Kubernetes cluster)
+
+- `docker compose up`
 - `./run.sh`
 - You can also run `dapr dashboard` to see the running applications. There should be 4 applications on the dashboard.
+- List all applications `dapr list`
+- To stop an application `dapr stop --app-id app-name`
 
 ![Dapr Dashboard](dapr-dashboard.png)
 
-## Test locally
+## Test locally (Not on a Kubernetes cluster)
 
 - `curl -X POST http://localhost:8080/subscribe -H "Content-Type: application/json" -d '{"email":"test.from.cli@example.com"}'`
-
-## Test outputs
-
-### From the Newsletter App (Producer)
-
-![Consumer App](consumer.png)
-
-### From the Newsletter App (Consumer)
-
-![Producer App](producer.png)
+- `curl -X POST http://localhost:3001/upload -F "file=@example.txt"`
 
 ## References
+
+- <https://docs.localstack.cloud/user-guide/aws/s3/>

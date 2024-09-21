@@ -7,14 +7,14 @@ spec:
   type: bindings.aws.s3
   version: v1
   metadata:
+    - name: endpoint
+      value: "http://s3.localhost.localstack.cloud:4566"
     - name: bucket
-      value: yetkin-dapr-test
-    - name: region
-      value: us-east-1
+      value: sample-bucket
     - name: accessKey
-      value: add-your-access-key
+      value: test
     - name: secretKey
-      value: add-your-secret-key
+      value: test
   scope:
     - newsletter-admin
     - newsletter

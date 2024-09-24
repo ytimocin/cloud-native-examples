@@ -2,14 +2,12 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: pubsub
-  namespace: default
+  namespace: newsletter
 spec:
-  # You can unplug Redis and plug in another pubsub component
-  # https://docs.dapr.io/reference/components-reference/supported-pubsub/
   type: pubsub.redis
   version: v1
   metadata:
     - name: redisHost
-      value: "redis:6380"
+      value: redis:6380
     - name: topic
-      value: "subscriptions"
+      value: subscriptions

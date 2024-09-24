@@ -2,6 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
+  namespace: newsletter
+  labels:
+    app: postgres
 spec:
   replicas: 1
   selector:
@@ -12,25 +15,11 @@ spec:
       labels:
         app: postgres
     spec:
-      initContainers:
-        - name: init-script
-          image: postgres:latest
-          env:
-            - name: POSTGRES_DB
-              value: "newsletter"
-            - name: POSTGRES_USER
-              value: "adminuser"
-            - name: POSTGRES_PASSWORD
-              value: "adminpass"
-          volumeMounts:
-            - name: init-script
-              mountPath: /docker-entrypoint-initdb.d
-          command: ["/bin/bash", "/docker-entrypoint-initdb.d/init.sh"]
       containers:
         - name: postgres
           image: postgres:latest
           ports:
-            - containerPort: 5433
+            - containerPort: 5432
           env:
             - name: POSTGRES_DB
               value: "newsletter"
@@ -39,12 +28,12 @@ spec:
             - name: POSTGRES_PASSWORD
               value: "adminpass"
           resources:
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
             requests:
-              cpu: "100m"
               memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
@@ -52,48 +41,33 @@ spec:
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: postgres-pvc
-        - name: init-script
-          configMap:
-            name: postgres-init-script
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres
+  namespace: newsletter
+  labels:
+    app: postgres
 spec:
   selector:
     app: postgres
   ports:
     - protocol: TCP
-      port: 5433
-      targetPort: 5433
+      port: 5432
+      targetPort: 5432
   type: ClusterIP
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
+  namespace: newsletter
+  labels:
+    app: postgres
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-init-script
-data:
-  init.sh: |
-    #!/bin/bash
-    set -e
-
-    # Example initialization commands
-    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-      CREATE TABLE IF NOT EXISTS subscriptions (
-        id SERIAL PRIMARY KEY,
-        email VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    EOSQL

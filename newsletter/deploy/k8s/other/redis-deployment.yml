@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
+  namespace: newsletter
 spec:
   replicas: 1
   selector:
@@ -29,7 +30,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis
+  namespace: newsletter
 spec:
+  type: ClusterIP
   selector:
     app: redis
   ports:

@@ -1,3 +1,7 @@
+.PHONY: apply-namespaces
+apply-namespaces:
+	kubectl apply -R -f namespaces
+
 .PHONY: apply-dapr
 apply-dapr:
 	kubectl apply -R -f dapr
@@ -12,4 +16,4 @@ apply-other:
 
 # Apply everything
 .PHONY: apply-all
-apply-all: apply-other apply-dapr apply-services
+apply-all: apply-namespaces apply-other apply-dapr apply-services

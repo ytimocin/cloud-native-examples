@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3
+  namespace: newsletter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3
+  template:
+    metadata:
+      labels:
+        app: s3
+    spec:
+      containers:
+        - name: s3
+          image: localstack/localstack:latest
+          ports:
+            - containerPort: 4566
+          env:
+            - name: SERVICES
+              value: "s3"
+            - name: DEFAULT_REGION
+              value: "us-east-1"
+            - name: AWS_ACCESS_KEY_ID
+              value: "test"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "test"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+          volumeMounts:
+            - name: localstack-volume
+              mountPath: /var/lib/localstack
+      volumes:
+        - name: localstack-volume
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3
+  namespace: newsletter
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4566
+      targetPort: 4566
+  selector:
+    app: s3

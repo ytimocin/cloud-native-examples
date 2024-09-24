@@ -2,21 +2,16 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: s3
-  namespace: default
+  namespace: newsletter
 spec:
   type: bindings.aws.s3
   version: v1
   metadata:
     - name: endpoint
-      value: "http://s3.localhost.localstack.cloud:4566"
+      value: "s3:4566"
     - name: bucket
       value: sample-bucket
     - name: accessKey
       value: test
     - name: secretKey
       value: test
-  scope:
-    - newsletter-admin
-    - newsletter
-    - consumer
-    - newsletter

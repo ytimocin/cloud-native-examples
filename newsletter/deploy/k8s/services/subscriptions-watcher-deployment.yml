@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: subscriptions-watcher
+  namespace: newsletter
 spec:
   replicas: 1
   selector:
@@ -33,6 +34,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: subscriptions-watcher
+  namespace: newsletter
 spec:
   type: LoadBalancer
   selector:

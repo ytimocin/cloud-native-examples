@@ -16,7 +16,7 @@ spec:
         - name: redis
           image: redis:latest
           ports:
-            - containerPort: 6380
+            - containerPort: 6379
           resources:
             limits:
               cpu: "0.5"
@@ -34,5 +34,5 @@ spec:
     app: redis
   ports:
     - protocol: TCP
-      port: 6380
-      targetPort: 6380
+      port: 6379
+      targetPort: 6379

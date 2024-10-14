@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3
+  labels:
+    app: s3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3
+  template:
+    metadata:
+      labels:
+        app: s3
+    spec:
+      containers:
+        - name: s3
+          image: localstack/localstack:latest
+          ports:
+            - containerPort: 4566 # Port for all LocalStack services (including S3)
+          env:
+            - name: SERVICES
+              value: s3 # Start only S3 service
+            - name: BUCKET_NAME
+              value: sample-bucket
+            - name: AWS_ACCESS_KEY_ID
+              value: test
+            - name: AWS_SECRET_ACCESS_KEY
+              value: test
+            - name: LOCALSTACK_API_KEY
+              value: test
+            - name: AWS_S3_FORCE_PATH_STYLE
+              value: "true" # Use path-style access for S3
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3
+spec:
+  selector:
+    app: s3
+  ports:
+    - protocol: TCP
+      port: 4566
+      targetPort: 4566
+  type: ClusterIP
+---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: create-s3-bucket
+# spec:
+#   template:
+#     spec:
+#       containers:
+#         - name: aws-cli
+#           image: localstack/localstack:latest
+#           command: ["/bin/sh", "-c"]
+#           args:
+#             - |
+#               sleep 10 && \
+#               awslocal --endpoint-url=http://s3:4566 s3api create-bucket --bucket sample-bucket && \
+#               awslocal --endpoint-url=http://s3:4566 s3api list-buckets
+#           env:
+#             - name: AWS_ACCESS_KEY_ID
+#               value: test
+#             - name: AWS_SECRET_ACCESS_KEY
+#               value: test
+#           resources:
+#             requests:
+#               memory: "64Mi"
+#               cpu: "250m"
+#             limits:
+#               memory: "128Mi"
+#               cpu: "500m"
+#       restartPolicy: OnFailure

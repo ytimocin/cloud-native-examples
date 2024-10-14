@@ -2,13 +2,13 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
   name: postgres
-  namespace: default
+  namespace: default-newsletter
 spec:
   type: bindings.postgres
   version: v1
   metadata:
     - name: url
-      value: "postgres://adminuser:adminpass@localhost:5433/newsletter?sslmode=disable"
+      value: "postgres://citus:newsletterTest!@c-ytimocin-test-postgres.ru4ckrgdxgqwi5.postgres.cosmos.azure.com:5432/newsletter"
     - name: table
       value: "subscriptions"
     - name: operations

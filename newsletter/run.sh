@@ -23,11 +23,11 @@ dapr run --app-id consumer --app-port 8081 --dapr-http-port 3501 \
 cd ../subscriptions-watcher
 mvn clean install && mvn clean package
 dapr run --resources-path ./components/pubsub --app-id subscriptions-watcher \
-  --app-port 3000 -- java -jar target/subscriptions-watcher-0.0.1-SNAPSHOT.jar --server.port=3000 &
+  --app-port 3000 --dapr-http-port 3502 -- java -jar target/subscriptions-watcher-0.0.1-SNAPSHOT.jar --server.port=3000 &
 
 # Start the newsletter admin service
 cd ../newsletter-admin
 mvn clean install && mvn clean package
 dapr run --resources-path ./components/bindings,./components/pubsub \
-  --app-id newsletter-admin --app-port 3001 -- java \
+  --app-id newsletter-admin --app-port 3001 --dapr-http-port 3503 -- java \
   -jar target/newsletter-admin-0.0.1-SNAPSHOT.jar --server.port=3001 &

@@ -11,7 +11,7 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.s
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
 
   redis:
     container_name: newsletter-redis
@@ -30,5 +30,14 @@ services:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
 
+  registry:
+    container_name: local-registry
+    image: registry:2
+    ports:
+      - "5055:5000"
+    volumes:
+      - registry_data:/var/lib/registry
+
 volumes:
   postgres_data:
+  registry_data:

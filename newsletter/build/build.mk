@@ -10,4 +10,4 @@ build: $(SERVICES:%=build-%)
 
 $(SERVICES:%=build-%):
 	echo "Building service: $(@:build-%=%)"
-	cd $(@:build-%=%) && docker buildx build --platform $(PLATFORMS) -t $(REGISTRY)/$(@:build-%=%):$(TAG) .
+	cd $(@:build-%=%) && docker buildx build --platform $(PLATFORMS) -t $(REGISTRY)/$(@:build-%=%):$(TAG) --push .

@@ -53,6 +53,27 @@ public class NewsletterAdminController {
     }
   }
 
+  @PostMapping("/copy")
+  public ResponseEntity<String> copyFile(@RequestParam("source") String source,
+      @RequestParam("destinationKey") String destinationKey,
+      @RequestParam("bucket") String bucket) {
+    try {
+      Map<String, String> metadata = new HashMap<>();
+
+      // Bucket is the destination bucket.
+      metadata.put("bucket", bucket);
+      metadata.put("source", source);
+      metadata.put("destinationKey", destinationKey);
+
+      // Invoke the S3 binding to copy the file.
+      this.daprClient.invokeBinding(BINDING_NAME, "copy", null, metadata).block();
+
+      return new ResponseEntity<>("File copied successfully", HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<>("Error copying file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   // An endpoint to list all subscribers of the newsletter.
   // Postgres Dapr component is used to store and list the subscribers.
   @GetMapping("/subscribers")

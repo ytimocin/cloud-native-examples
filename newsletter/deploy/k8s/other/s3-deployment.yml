@@ -24,8 +24,9 @@ spec:
               value: s3 # Start only S3 service
             - name: BUCKET_NAME
               value: sample-bucket
+              # https://docs.localstack.cloud/references/credentials/
             - name: AWS_ACCESS_KEY_ID
-              value: test
+              value: LSIAQAAAAAAVNCBMPNSG
             - name: AWS_SECRET_ACCESS_KEY
               value: test
             - name: LOCALSTACK_API_KEY
